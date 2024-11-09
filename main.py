@@ -79,10 +79,8 @@ async def registapi_command(update: Update, context):
 async def total_command(update: Update, context):
     user_id = str(update.message.from_user.id)
     if user_id not in user_database:
-        user_database[user_id] = {'api_key': '', 'regists': ''}
+        user_database[user_id] = {'api_key': '', 'regists': []}
         save_database(db_file, user_database)
-        
-    
         
     if user_database[user_id]["api_key"] != "":
         headers = {"Authorization": user_database[user_id]["api_key"]}
@@ -93,9 +91,15 @@ async def total_command(update: Update, context):
         sign = "+" if ppl > 0 else "-"
         emoji = "💸" if ppl > 0 else "😢"
         message = f"Total: {total}€ | PNL: {sign}{abs(ppl)}% {emoji}"
+        
+        # Adicionar o total ao campo 'regists'
+        user_database[user_id]['regists'].append(total)
+        save_database(db_file, user_database)
+        
         await update.message.reply_text(message)
     else:
         await update.message.reply_text("Não tens nenhuma chave de API registada. Faz /registar_api para registar.")
+
         
 
 if __name__ == "__main__":
