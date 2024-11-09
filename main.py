@@ -93,7 +93,7 @@ async def total_command(update: Update, context):
         message = f"Total: {total}€ | PNL: {sign}{abs(ppl)}% {emoji}"
         
         # Adicionar o total ao campo 'regists'
-        user_database[user_id]['regists'].append(total)
+        user_database[user_id]['regists'] = user_database[user_id]['regists'] + "," + str(total)
         save_database(db_file, user_database)
         
         await update.message.reply_text(message)
